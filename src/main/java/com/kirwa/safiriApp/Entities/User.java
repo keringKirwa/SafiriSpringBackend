@@ -12,7 +12,7 @@ import javax.persistence.*;
     @NoArgsConstructor
     @Builder
     @Table(
-            name = "userTable",
+            name = "USER_TABLE",
             uniqueConstraints = @UniqueConstraint(
                     name = "emailAddress_unique",
                     columnNames = "emailAddress"

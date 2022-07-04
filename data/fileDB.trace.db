@@ -1,0 +1,36 @@
+2022-07-04 17:28:58 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]USER_TABLE"; expected "UPDATE, USE"; SQL statement:
+USER_TABLE [42001-214]
+2022-07-04 17:47:32 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERTABLE" not found; SQL statement:
+SELECT * FROM userTable WHERE emailAddress=? [42102-214]
+2022-07-04 17:48:42 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERTABLE" not found; SQL statement:
+SELECT * FROM userTable WHERE emailAddress = ? [42102-214]
+2022-07-04 17:52:40 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "create table [*]user (user_id bigint not null, email_address varchar(255) not null, first_name varchar(255), last_name varchar(255), primary key (user_id))"; expected "identifier"; SQL statement:
+create table user (user_id bigint not null, email_address varchar(255) not null, first_name varchar(255), last_name varchar(255), primary key (user_id)) [42001-214]
+2022-07-04 17:52:40 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "alter table [*]user drop constraint if exists emailAddress_unique"; expected "identifier"; SQL statement:
+alter table user drop constraint if exists emailAddress_unique [42001-214]
+2022-07-04 17:52:40 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "alter table [*]user add constraint emailAddress_unique unique (email_address)"; expected "identifier"; SQL statement:
+alter table user add constraint emailAddress_unique unique (email_address) [42001-214]
+2022-07-04 17:53:08 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "create table [*]user (user_id bigint not null, email_address varchar(255) not null, first_name varchar(255), last_name varchar(255), primary key (user_id))"; expected "identifier"; SQL statement:
+create table user (user_id bigint not null, email_address varchar(255) not null, first_name varchar(255), last_name varchar(255), primary key (user_id)) [42001-214]
+2022-07-04 17:53:08 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "alter table [*]user drop constraint if exists emailAddress_unique"; expected "identifier"; SQL statement:
+alter table user drop constraint if exists emailAddress_unique [42001-214]
+2022-07-04 17:53:08 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "alter table [*]user add constraint emailAddress_unique unique (email_address)"; expected "identifier"; SQL statement:
+alter table user add constraint emailAddress_unique unique (email_address) [42001-214]
+2022-07-04 17:55:41 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "create table [*]user (user_id bigint not null, email_address varchar(255) not null, first_name varchar(255), last_name varchar(255), primary key (user_id))"; expected "identifier"; SQL statement:
+create table user (user_id bigint not null, email_address varchar(255) not null, first_name varchar(255), last_name varchar(255), primary key (user_id)) [42001-214]
+2022-07-04 17:55:41 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "alter table [*]user drop constraint if exists emailAddress_unique"; expected "identifier"; SQL statement:
+alter table user drop constraint if exists emailAddress_unique [42001-214]
+2022-07-04 17:55:41 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "alter table [*]user add constraint emailAddress_unique unique (email_address)"; expected "identifier"; SQL statement:
+alter table user add constraint emailAddress_unique unique (email_address) [42001-214]
