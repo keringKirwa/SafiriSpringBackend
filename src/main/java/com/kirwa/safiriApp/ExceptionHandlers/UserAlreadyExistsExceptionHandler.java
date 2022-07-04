@@ -1,6 +1,7 @@
-package com.kirwa.safiriApp.Exceptions;
+package com.kirwa.safiriApp.ExceptionHandlers;
 
 import com.kirwa.safiriApp.Entities.ErrorMessage;
+import com.kirwa.safiriApp.Exceptions.UserAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,7 +17,7 @@ public class UserAlreadyExistsExceptionHandler {
         @ExceptionHandler(UserAlreadyExistsException.class)
         public ResponseEntity<ErrorMessage> departmentNotFoundException(
                 UserAlreadyExistsException exception, WebRequest request) {
-            ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND,
+            ErrorMessage message = new ErrorMessage(HttpStatus.BAD_REQUEST,
                     exception.getMessage());
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -24,3 +25,4 @@ public class UserAlreadyExistsExceptionHandler {
         }
     }
 }
+
