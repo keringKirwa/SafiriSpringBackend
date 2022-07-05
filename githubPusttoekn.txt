@@ -1,1 +1,4 @@
 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
+
+https://www.geeksforgeeks.org/spring-boot-sending-email-via-smtp/
+SafiriEmailToken : qxqefdkwwsjopuzl
