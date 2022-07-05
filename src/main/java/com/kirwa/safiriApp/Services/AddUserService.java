@@ -1,61 +1,56 @@
 package com.kirwa.safiriApp.Services;
-
-import com.kirwa.safiriApp.Entities.EmailSender;
 import com.kirwa.safiriApp.Entities.User;
 import com.kirwa.safiriApp.Entities.VerificationDetails;
 import com.kirwa.safiriApp.Exceptions.UserAlreadyExistsException;
+import com.kirwa.safiriApp.Models.UserModel;
 import com.kirwa.safiriApp.Repositories.UserRepository;
 import com.kirwa.safiriApp.Repositories.VerificationDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Random;
 
 @Service
 public class AddUserService {
+
     @Autowired
     UserRepository userRepository;
-
     @Autowired
     VerificationDetailsRepository verificationDetailsRepository;
 
     @Autowired
-    private EmailSender emailSender;
+    private PasswordEncoder passwordEncoder;
 
-    public User addUser(User user) throws UserAlreadyExistsException {
+    public User registerUser(UserModel userModel) throws UserAlreadyExistsException {
 
-        /*TODO: cause an application event here, then make an application event listener
-        *  to handle the same event .*/
+        String existsEmailAddress= userModel.getEmail();
+        User exists=userRepository.findByEmailAddress(existsEmailAddress);
 
-        String emailAddress= user.getEmailAddress();
-        User exists=userRepository.findByEmailAddress(emailAddress);
         if(! (exists ==null)){
             throw new UserAlreadyExistsException("user with that email address already exists");
         }else{
+
+            User user = new User();
+            user.setEmailAddress(userModel.getEmail());
+            user.setFirstName(userModel.getFirstName());
+            user.setLastName(userModel.getLastName());
+            user.setPassword(passwordEncoder.encode(userModel.getPassword()));
+
             User registeredUser= userRepository.save(user);
-            Random rnd = new Random();
-            Integer number = rnd.nextInt(999999);
-            String newNumber= number.toString();
-
-            emailSender.sendSimpleMessage(registeredUser.getEmailAddress(),
-                    "You signed up with Safari2022 Booking App." +
-                            " PLease Activate Your Account with this code : ",newNumber);
-
-            return registeredUser;
+            return  registeredUser;
         }
     }
-
-
     public List<User> getAllUsers() {
         List<User> allUsers=userRepository.findAll();
         return allUsers;
     }
 
     public void saveVerificationDetailsForUser(String token, User user) {
-        VerificationDetails verificationToken
+        VerificationDetails verificationDetails
                 = new VerificationDetails(user, token);
 
-        verificationDetailsRepository.save(verificationToken);
+        verificationDetailsRepository.save(verificationDetails);
     }
 
 }

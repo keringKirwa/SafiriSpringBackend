@@ -1,5 +1,6 @@
 package com.kirwa.safiriApp.EventListeners;
 
+import com.kirwa.safiriApp.Entities.EmailSender;
 import com.kirwa.safiriApp.Entities.User;
 import com.kirwa.safiriApp.Events.UserRegisteredEvent;
 import com.kirwa.safiriApp.Services.AddUserService;
@@ -18,13 +19,21 @@ public class UserRegisteredEventListener
     @Autowired
     private AddUserService userService;
 
+    @Autowired
+    private EmailSender emailSender;
+
     @Override
     public void onApplicationEvent(UserRegisteredEvent event) {
         Random rnd = new Random();
         Integer number = rnd.nextInt(999999);
         String token= number.toString();
+
         User user = event.getUser();
         userService.saveVerificationDetailsForUser(token,user);
+
+        emailSender.sendSimpleMessage(user.getEmailAddress(),
+                "You signed up with Safari2022 Booking App." +
+                        " PLease Activate Your Account with this code : ",token);
 
         log.info("Token generated successfully...");
     }

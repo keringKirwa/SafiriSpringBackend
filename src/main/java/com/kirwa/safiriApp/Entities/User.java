@@ -39,6 +39,7 @@ import javax.persistence.*;
                 nullable = false
         )
         private String emailAddress;
+        private String password;
     }
 
 

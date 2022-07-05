@@ -11,8 +11,8 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 public class VerificationDetails {
+    /*TODO: EXPIRES IN 10  MINUTES*/
 
-    //Expiration time 10 miutes
     private static  final int EXPIRATION_TIME = 10;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,7 @@ public class VerificationDetails {
     private Date expirationTime;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id",
+    @JoinColumn(name = "userId",
             nullable = false,
             foreignKey = @ForeignKey(name = "FK_USER_VERIFY_TOKEN"))
     private User user;
