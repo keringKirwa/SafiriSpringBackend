@@ -5,6 +5,7 @@ import com.kirwa.safiriApp.Entities.VerificationDetails;
 import com.kirwa.safiriApp.Events.ResendTokenEvent;
 import com.kirwa.safiriApp.Events.UserRegisteredEvent;
 import com.kirwa.safiriApp.Exceptions.UserAlreadyExistsException;
+import com.kirwa.safiriApp.Models.ResetPasswordModel;
 import com.kirwa.safiriApp.Models.TokenModel;
 import com.kirwa.safiriApp.Models.UserModel;
 import com.kirwa.safiriApp.Services.AddUserService;
@@ -59,4 +60,12 @@ public class UserRegistrationController {
         return  "token sent via the email :"+oldVerificationDetails.getUser().getEmailAddress();
     }
 
+    @PostMapping("/users/resetPassword")
+    public User resetPassword(@RequestBody ResetPasswordModel resetPasswordModel)
+            throws IllegalAccessException {
+        log.info("Inside the Reset Password Controller -------//////////-----");
+
+        User userWithResetPassword =userService.resetPassword(resetPasswordModel);
+        return  userWithResetPassword;
+    }
 }

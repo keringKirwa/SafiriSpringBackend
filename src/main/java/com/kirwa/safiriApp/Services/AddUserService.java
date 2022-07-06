@@ -2,6 +2,7 @@ package com.kirwa.safiriApp.Services;
 import com.kirwa.safiriApp.Entities.User;
 import com.kirwa.safiriApp.Entities.VerificationDetails;
 import com.kirwa.safiriApp.Exceptions.UserAlreadyExistsException;
+import com.kirwa.safiriApp.Models.ResetPasswordModel;
 import com.kirwa.safiriApp.Models.UserModel;
 import com.kirwa.safiriApp.Repositories.UserRepository;
 import com.kirwa.safiriApp.Repositories.VerificationDetailsRepository;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.*;
 
 @Service
@@ -108,5 +110,21 @@ public class AddUserService {
         return expirationDate;
 
 
+    }
+
+    public User resetPassword(ResetPasswordModel resetPasswordModel) throws IllegalAccessException {
+        Optional<User> userOptional= Optional.ofNullable(userRepository.
+                findByEmailAddress(resetPasswordModel.getEmailAddress()));
+        if (!userOptional.isPresent()){
+            throw new IllegalAccessException("User with that email Address was not found!!");
+        }else{
+            User user= userOptional.get();
+            if (! passwordEncoder.matches(resetPasswordModel.getOldPassword(), user.getPassword())){
+                throw new IllegalAccessException("The old password provided is not correct!");
+            }
+            user.setPassword(passwordEncoder.encode(resetPasswordModel.getNewPassword()));
+            userRepository.save(user);
+            return user;
+        }
     }
 }
