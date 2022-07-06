@@ -24,6 +24,10 @@ public class UserRegisteredEventListener
 
     @Override
     public void onApplicationEvent(UserRegisteredEvent event) {
+        /*FIXME: when the object of the class UserRegistered is published then the 
+           onApplicationEvent method is triggered. this method will generate a random string and then
+            save the details of activation in the database by calling the service layer again.*/
+
         Random rnd = new Random();
         Integer number = rnd.nextInt(999999);
         String token= number.toString();

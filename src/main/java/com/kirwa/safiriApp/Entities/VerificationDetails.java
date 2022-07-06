@@ -11,7 +11,6 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 public class VerificationDetails {
-    /*TODO: EXPIRES IN 10  MINUTES*/
 
     private static  final int EXPIRATION_TIME = 10;
     @Id
@@ -19,33 +18,38 @@ public class VerificationDetails {
     private Long id;
 
     private String token;
-
     private Date expirationTime;
+    private Boolean isEnabled;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "userId",
             nullable = false,
             foreignKey = @ForeignKey(name = "FK_USER_VERIFY_TOKEN"))
     private User user;
 
     public VerificationDetails(User user, String token) {
+        /*TODO: this is the constructor , called at the moment of instantiating this class.it is also in this
+        *  constructor that we add the default isEnabled== false.*/
+
         super();
         this.token = token;
         this.user = user;
-        this.expirationTime = calculateExpirationDate(EXPIRATION_TIME);
+        this.expirationTime = calculateExpirationDateForUserDetails(EXPIRATION_TIME);
+        this.isEnabled=false;
     }
 
     public VerificationDetails(String token) {
         super();
         this.token = token;
-        this.expirationTime = calculateExpirationDate(EXPIRATION_TIME);
+        this.expirationTime = calculateExpirationDateForUserDetails(EXPIRATION_TIME);
     }
+    private Date calculateExpirationDateForUserDetails(int expirationTime){
+        Long calendarInstance =Calendar.getInstance().getTimeInMillis();
+        Long expirationDateInSeconds=calendarInstance+(EXPIRATION_TIME*60*1000);
+        Date expirationDate=new Date(expirationDateInSeconds);
+        return expirationDate;
 
-    private Date calculateExpirationDate(int expirationTime) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(new Date().getTime());
-        calendar.add(Calendar.MINUTE, expirationTime);
-        return new Date(calendar.getTime().getTime());
+
     }
 
 }

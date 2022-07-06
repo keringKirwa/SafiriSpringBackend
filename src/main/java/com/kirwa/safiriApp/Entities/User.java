@@ -34,12 +34,14 @@ import javax.persistence.*;
         private String firstName;
         private String lastName;
 
+
         @Column(
                 name = "emailAddress",
                 nullable = false
         )
         private String emailAddress;
         private String password;
+        private boolean isEnabled = false;
     }
 
 
