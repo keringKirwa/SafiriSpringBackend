@@ -7,11 +7,10 @@ import javax.persistence.*;
 import java.util.Calendar;
 import java.util.Date;
 
-@Entity
-@Data
 @NoArgsConstructor
-public class VerificationDetails {
-
+@Data
+@Entity
+public class ForgotPasswordDetails {
     private static  final int EXPIRATION_TIME = 10;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,36 +18,26 @@ public class VerificationDetails {
 
     private String token;
     private Date expirationTime;
-    private Boolean isEnabled;
 
     @OneToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "userId",
-            nullable = false,
-            foreignKey = @ForeignKey(name = "FK_USER_VERIFY_TOKEN"))
+            nullable =false,
+            foreignKey = @ForeignKey(name = "FK_USER_FORGOT_PASSWORD_TOKEN"))
     private User user;
 
-    public VerificationDetails(User user, String token) {
+    public ForgotPasswordDetails(User user, String token) {
 
-        /*TODO: this is the constructor , called at the moment of instantiating this class.it is also in this
-        *  constructor that we add the default isEnabled== false.*/
+        /*TODO:As an entity, this table is created when the application boots up.
+           An instance of this class created when the user sends us a forgot password request.That
+           is , this constructor is called.*/
 
         super();
         this.token = token;
         this.user = user;
         this.expirationTime = calculateExpirationDateForUserDetails();
-        this.isEnabled=false;
-    }
-
-    public VerificationDetails(String token) {
-        super();
-        this.token = token;
-        this.expirationTime = calculateExpirationDateForUserDetails();
     }
     private Date calculateExpirationDateForUserDetails(){
-        long calendarInstance =Calendar.getInstance().getTimeInMillis();
+        long calendarInstance = Calendar.getInstance().getTimeInMillis();
         return new Date(calendarInstance+(EXPIRATION_TIME*60*1000));
-
-
     }
-
 }

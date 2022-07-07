@@ -13,7 +13,8 @@ public class ResendTokenEvent extends ApplicationEvent {
 
     public ResendTokenEvent(VerificationDetails verificationDetails) {
         /*TODO: this constructor is used in creating an event, that event has
-           verification Details in it.*/
+           verificationDetails in it. and the VerificationDetails has got
+           User instance in it too*/
 
         super(verificationDetails);
         this.verificationDetails=verificationDetails;

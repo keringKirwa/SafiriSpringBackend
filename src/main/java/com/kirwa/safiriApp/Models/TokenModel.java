@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 
 public class TokenModel {
     private String token;
+    private String forgotPasswordToken;
 
 }

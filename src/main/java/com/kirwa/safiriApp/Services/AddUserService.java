@@ -1,9 +1,11 @@
 package com.kirwa.safiriApp.Services;
+import com.kirwa.safiriApp.Entities.ForgotPasswordDetails;
 import com.kirwa.safiriApp.Entities.User;
 import com.kirwa.safiriApp.Entities.VerificationDetails;
 import com.kirwa.safiriApp.Exceptions.UserAlreadyExistsException;
 import com.kirwa.safiriApp.Models.ResetPasswordModel;
 import com.kirwa.safiriApp.Models.UserModel;
+import com.kirwa.safiriApp.Repositories.ForgotPasswordDetailsRepository;
 import com.kirwa.safiriApp.Repositories.UserRepository;
 import com.kirwa.safiriApp.Repositories.VerificationDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.*;
 
 @Service
@@ -22,6 +23,9 @@ public class AddUserService {
     UserRepository userRepository;
     @Autowired
     VerificationDetailsRepository verificationDetailsRepository;
+
+    @Autowired
+    ForgotPasswordDetailsRepository forgotPasswordDetailsRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -45,7 +49,6 @@ public class AddUserService {
             return registeredUser;
         }
     }
-
     public List<User> getAllUsers() {
         List<User> allUsers = userRepository.findAll();
         return allUsers;
@@ -86,32 +89,18 @@ public class AddUserService {
         }
 
     }
-
     public VerificationDetails findByToken(String token) throws IllegalAccessException {
+
         VerificationDetails verificationDetails = verificationDetailsRepository.findByToken(token);
         if (verificationDetails == null) {
             throw new IllegalAccessException("User with that token was not found !!!");
         }
-
-        Integer number = new Random().nextInt(999999);
-        String tokenGenerated = number.toString();
-
-        verificationDetails.setToken(tokenGenerated);
+        verificationDetails.setToken(generateTokenForUser());
         verificationDetails.setExpirationTime(calculateExpirationDateForUserDetails());
 
         verificationDetailsRepository.save(verificationDetails);
         return verificationDetails;
     }
-
-    private Date calculateExpirationDateForUserDetails() {
-        Long calendarInstance = Calendar.getInstance().getTimeInMillis();
-        Long expirationDateInSeconds = calendarInstance + (EXPIRATION_TIME * 60 * 1000);
-        Date expirationDate = new Date(expirationDateInSeconds);
-        return expirationDate;
-
-
-    }
-
     public User resetPassword(ResetPasswordModel resetPasswordModel) throws IllegalAccessException {
         Optional<User> userOptional= Optional.ofNullable(userRepository.
                 findByEmailAddress(resetPasswordModel.getEmailAddress()));
@@ -127,4 +116,33 @@ public class AddUserService {
             return user;
         }
     }
+    public ForgotPasswordDetails forgotPassword(String emailAddress) throws IllegalAccessException {
+        Optional<User> userOptional= Optional.ofNullable(userRepository.
+                findByEmailAddress(emailAddress));
+        if (!userOptional.isPresent()){
+            throw new IllegalAccessException("User with that email Address was not found!!");
+        }else{
+            User user =userOptional.get();
+            return saveForgotPasswordDetailsForUser(user);
+
+        }
+    }
+    public ForgotPasswordDetails saveForgotPasswordDetailsForUser( User user) {
+       ForgotPasswordDetails forgotPasswordDetails = new ForgotPasswordDetails();
+       forgotPasswordDetails.setUser(user);
+       forgotPasswordDetails.setToken(generateTokenForUser());
+       forgotPasswordDetails.setExpirationTime(calculateExpirationDateForUserDetails());
+       return forgotPasswordDetailsRepository.save(forgotPasswordDetails);
+    }
+
+    private Date calculateExpirationDateForUserDetails() {
+        long calendarInstance = Calendar.getInstance().getTimeInMillis();
+        return new Date(calendarInstance + (EXPIRATION_TIME * 60 * 1000));
+    }
+
+    private String generateTokenForUser() {
+        int number = new Random().nextInt(999999);
+        return Integer.toString(number);
+    }
+
 }

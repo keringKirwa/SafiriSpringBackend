@@ -1,10 +1,13 @@
 package com.kirwa.safiriApp.Controllers;
 
+import com.kirwa.safiriApp.Entities.ForgotPasswordDetails;
 import com.kirwa.safiriApp.Entities.User;
 import com.kirwa.safiriApp.Entities.VerificationDetails;
+import com.kirwa.safiriApp.Events.ForgotPasswordEvent;
 import com.kirwa.safiriApp.Events.ResendTokenEvent;
 import com.kirwa.safiriApp.Events.UserRegisteredEvent;
 import com.kirwa.safiriApp.Exceptions.UserAlreadyExistsException;
+import com.kirwa.safiriApp.Models.ForgotPasswordModel;
 import com.kirwa.safiriApp.Models.ResetPasswordModel;
 import com.kirwa.safiriApp.Models.TokenModel;
 import com.kirwa.safiriApp.Models.UserModel;
@@ -15,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -38,16 +42,14 @@ public class UserRegistrationController {
     @GetMapping ("/users/getUsers")
     public List<User> getUsers() {
         log.info("Inside register userRegistration Service of userController");
-        List<User> allUsersRegistered = userService.getAllUsers();
-        return allUsersRegistered;
+        return userService.getAllUsers();
     }
 
     @PostMapping("/users/activateAccount")
     public String activateAccount(@RequestBody TokenModel token)  {
         log.info("Inside register Users APPLICATION of DepartmentController");
-        String activated = userService.activateAccount(token.getToken());
 
-        return  activated;
+        return userService.activateAccount(token.getToken());
     }
 
     @PostMapping("/users/resendToken/{oldToken}")
@@ -65,7 +67,16 @@ public class UserRegistrationController {
             throws IllegalAccessException {
         log.info("Inside the Reset Password Controller -------//////////-----");
 
-        User userWithResetPassword =userService.resetPassword(resetPasswordModel);
-        return  userWithResetPassword;
+        return userService.resetPassword(resetPasswordModel);
+    }
+
+    @PostMapping("/users/forgotPasswordRequest")
+    public String forgotPassword(@RequestBody ForgotPasswordModel forgotPasswordDetails)
+            throws IllegalAccessException {
+        log.info("Inside the Reset Password Controller -------//////////-----");
+
+        ForgotPasswordDetails forgotPasswordDetails1 =userService.forgotPassword(forgotPasswordDetails.getEmailAddress());
+        publisher.publishEvent(new ForgotPasswordEvent(forgotPasswordDetails1));
+        return  "forgot Password Token Sent to the user Email Address"+forgotPasswordDetails.getEmailAddress();
     }
 }

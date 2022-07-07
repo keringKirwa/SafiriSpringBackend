@@ -5,6 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/*TODO: note hat at the moment of instantiating the user class then we will also be
+    required to create instances on the verificationDetails class , and the
+      forgot password class.*/
+
 import javax.persistence.*;
     @Entity
     @Data
