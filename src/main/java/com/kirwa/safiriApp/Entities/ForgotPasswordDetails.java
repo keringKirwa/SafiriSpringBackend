@@ -25,6 +25,8 @@ public class ForgotPasswordDetails {
             foreignKey = @ForeignKey(name = "FK_USER_FORGOT_PASSWORD_TOKEN"))
     private User user;
 
+    /*FIXME: note that i can find a user using the forgotPassword details , and not vice versa.*/
+
     public ForgotPasswordDetails(User user, String token) {
 
         /*TODO:As an entity, this table is created when the application boots up.

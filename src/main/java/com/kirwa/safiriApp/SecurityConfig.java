@@ -20,8 +20,6 @@ public class SecurityConfig {
             "/users*",
             "/h2-console/login.do"
     };
-
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(11);

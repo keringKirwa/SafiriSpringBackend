@@ -102,25 +102,30 @@ public class AddUserService {
         return verificationDetails;
     }
     public User resetPassword(ResetPasswordModel resetPasswordModel) throws IllegalAccessException {
+
+        /*TODO: the user in this case knows the password but wants to change it.Normal situatons for any user who feels his
+        *  or her password is insecure or too much complex.*/
+
         Optional<User> userOptional= Optional.ofNullable(userRepository.
                 findByEmailAddress(resetPasswordModel.getEmailAddress()));
         if (!userOptional.isPresent()){
-            throw new IllegalAccessException("User with that email Address was not found!!");
+            throw new IllegalAccessException("User with that email Address was not found.What do you want to change then ??!!");
         }else{
             User user= userOptional.get();
             if (! passwordEncoder.matches(resetPasswordModel.getOldPassword(), user.getPassword())){
-                throw new IllegalAccessException("The old password provided is not correct!");
+                throw new IllegalAccessException("The password provided does not match the Old password.!");
             }
             user.setPassword(passwordEncoder.encode(resetPasswordModel.getNewPassword()));
             userRepository.save(user);
             return user;
         }
     }
-    public ForgotPasswordDetails forgotPassword(String emailAddress) throws IllegalAccessException {
+    public ForgotPasswordDetails forgotPasswordRequest(String emailAddress) throws IllegalAccessException {
         Optional<User> userOptional= Optional.ofNullable(userRepository.
                 findByEmailAddress(emailAddress));
         if (!userOptional.isPresent()){
-            throw new IllegalAccessException("User with that email Address was not found!!");
+            throw new IllegalAccessException("User with that email Address was not found.Request " +
+                    "for forgot password failed!!");
         }else{
             User user =userOptional.get();
             return saveForgotPasswordDetailsForUser(user);
@@ -128,11 +133,49 @@ public class AddUserService {
         }
     }
     public ForgotPasswordDetails saveForgotPasswordDetailsForUser( User user) {
+        ForgotPasswordDetails forgotPasswordDetails1=forgotPasswordDetailsRepository.findByUser(user);
+        if(forgotPasswordDetails1 !=null){
+            forgotPasswordDetailsRepository.delete(forgotPasswordDetails1);
+        }
        ForgotPasswordDetails forgotPasswordDetails = new ForgotPasswordDetails();
        forgotPasswordDetails.setUser(user);
        forgotPasswordDetails.setToken(generateTokenForUser());
        forgotPasswordDetails.setExpirationTime(calculateExpirationDateForUserDetails());
        return forgotPasswordDetailsRepository.save(forgotPasswordDetails);
+    }
+
+    public String forgotPasswordReset(String emailAddress, String token,String newPassword) throws IllegalAccessException {
+        Optional<User> userOptional= Optional.ofNullable(userRepository.findByEmailAddress(emailAddress));
+
+        if (!userOptional.isPresent()){
+            throw new IllegalAccessException("User with that email Address was not found!!");
+        }else{
+            User user=userOptional.get();
+            Optional<ForgotPasswordDetails> forgotPasswordDetailsOptional=
+                    Optional.ofNullable(forgotPasswordDetailsRepository.findByUser(user));
+
+            if(!forgotPasswordDetailsOptional.isPresent()){
+                throw new IllegalAccessException("NO TOKEN WAS FOUND FOR THAT USER !!!");
+            }
+            ForgotPasswordDetails forgotPasswordDetails=forgotPasswordDetailsOptional.get();
+            if(!forgotPasswordDetails.getToken().equals(token)){
+                throw new IllegalAccessException("The token provided is not valid");
+
+            }
+                Date expirationDate=forgotPasswordDetails.getExpirationTime();
+
+                Date currentDate = Calendar.getInstance().getTime();
+
+                if ((expirationDate.getTime() - currentDate.getTime()) < 0) {
+                    forgotPasswordDetailsRepository.delete(forgotPasswordDetails);
+                    return "Token Already expired";
+                }else{
+                    user.setPassword(passwordEncoder.encode(newPassword));
+                    userRepository.save(user);
+                    return "Success";
+
+            }
+        }
     }
 
     private Date calculateExpirationDateForUserDetails() {

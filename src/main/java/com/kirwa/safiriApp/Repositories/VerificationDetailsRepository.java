@@ -7,4 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface VerificationDetailsRepository extends JpaRepository<VerificationDetails, Long> {
     VerificationDetails findByToken(String token);
+
+
+    void delete(VerificationDetails verificationDetails);
 }

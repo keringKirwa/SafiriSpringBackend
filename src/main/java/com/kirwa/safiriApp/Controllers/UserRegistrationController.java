@@ -73,10 +73,21 @@ public class UserRegistrationController {
     @PostMapping("/users/forgotPasswordRequest")
     public String forgotPassword(@RequestBody ForgotPasswordModel forgotPasswordDetails)
             throws IllegalAccessException {
-        log.info("Inside the Reset Password Controller -------//////////-----");
+        /*TODO: the user here requests for a reset token.*/
+        log.info("Inside the Request  Reset Password Controller -------//////////-----");
 
-        ForgotPasswordDetails forgotPasswordDetails1 =userService.forgotPassword(forgotPasswordDetails.getEmailAddress());
+        ForgotPasswordDetails forgotPasswordDetails1 =userService.
+                forgotPasswordRequest(forgotPasswordDetails.getEmailAddress());
         publisher.publishEvent(new ForgotPasswordEvent(forgotPasswordDetails1));
         return  "forgot Password Token Sent to the user Email Address"+forgotPasswordDetails.getEmailAddress();
+    }
+
+    @PostMapping("/users/forgotPasswordReset")
+    public String forgotPasswordReset(@RequestBody HashMap<String, String> passwordForgetDetails)
+            throws IllegalAccessException {
+        log.info("Inside the Reset Password Functionality Controller -------//////////-----");
+
+        return userService.forgotPasswordReset(passwordForgetDetails.get("emailAddress"),
+                passwordForgetDetails.get("token"),passwordForgetDetails.get("newPassword"));
     }
 }
