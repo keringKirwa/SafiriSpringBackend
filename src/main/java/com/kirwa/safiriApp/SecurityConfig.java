@@ -18,7 +18,9 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     private static final String[] WHITE_LIST_URLS = {
             "/users*",
-            "/h2-console/login.do"
+            "/h2-console/login.do",
+            "/cars*",
+            "/seats*"
     };
     @Bean
     public PasswordEncoder passwordEncoder() {
