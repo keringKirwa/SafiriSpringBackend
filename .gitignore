@@ -1,11 +1,11 @@
 HELP.md
 target/
-githubPusttoekn.txt
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target
-/githubPusttoekn.txt
-/.env
+githubPusttoekn.txt
+.env
+
 
 ### STS ###
 .apt_generated
