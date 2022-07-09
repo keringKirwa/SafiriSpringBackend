@@ -1,6 +1,7 @@
 package com.kirwa.safiriApp.Controllers;
 
 import com.kirwa.safiriApp.Entities.Car;
+import com.kirwa.safiriApp.Entities.TwilioSMSSender;
 import com.kirwa.safiriApp.Services.CarService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,12 @@ public class CarController {
     @GetMapping("/cars/getAllCars")
     public List<Car> getAllCars() {
         return carService.getAllCars();
+    }
+    @GetMapping("/testTwilio")
+    public String testTwilio() {
+        TwilioSMSSender twilioSMSsender=new TwilioSMSSender();
+        twilioSMSsender.sendSMS();
+        return "twilio tested successfully";
     }
 
     @GetMapping("/cars/getCarById")

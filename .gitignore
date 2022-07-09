@@ -3,7 +3,9 @@ target/
 githubPusttoekn.txt
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
-!**/src/test/**/target/
+!**/src/test/**/target
+/githubPusttoekn.txt
+/.env
 
 ### STS ###
 .apt_generated
@@ -13,7 +15,7 @@ githubPusttoekn.txt
 .settings
 .springBeans
 .sts4-cache
-.githubPusttoekn.txt
+
 
 ### IntelliJ IDEA ###
 .idea
